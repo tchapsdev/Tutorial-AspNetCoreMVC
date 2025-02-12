@@ -20,10 +20,15 @@ namespace WebAppMVC.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string q = "")
         {
+            var query = _context.Customer.Where(c =>
+                c.Name.Contains(q) ||
+                c.Email.Contains(q) ||
+                 c.Phone.Contains(q)
+                );
 
-            var customers = await _context.Customer.ToListAsync();
+            var customers = await query.ToListAsync();
 
             return View(customers);
         }

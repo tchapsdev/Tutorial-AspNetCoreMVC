@@ -10,6 +10,25 @@
     <a asp-action="Create">Create New</a>
 </p>
 
+<div class="container">
+    <form asp-action="Index" asp-controller="Customers" method="get">
+
+        <div class="row">
+
+            <div class="col-4">
+                <input name="q" id="q" class="form-control" />
+            </div>
+
+            <div class="col-4">
+                <button type="submit" class="form-control btn-primary">Search</button>
+            </div>          
+
+        </div>
+
+    </form>
+</div>
+
+<hr />
 
 <table class="table">
     <thead>
