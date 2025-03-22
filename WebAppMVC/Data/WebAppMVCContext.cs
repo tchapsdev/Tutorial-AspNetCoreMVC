@@ -9,7 +9,8 @@ namespace WebAppMVC.Data
 {
     public class WebAppMVCContext : DbContext
     {
-        public WebAppMVCContext (DbContextOptions<WebAppMVCContext> options)
+        public WebAppMVCContext
+            (DbContextOptions<WebAppMVCContext> options)
             : base(options)
         {
         }

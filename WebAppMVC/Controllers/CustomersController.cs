@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,7 @@ namespace WebAppMVC.Controllers
         }
 
         // GET: Customers/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -62,6 +64,7 @@ namespace WebAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Address,City,Region,PostalCode,Country,Phone,Fax")] Customer customer)
         {
             if (ModelState.IsValid)
@@ -73,6 +76,7 @@ namespace WebAppMVC.Controllers
             return View(customer);
         }
 
+        [Authorize]
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -93,6 +97,7 @@ namespace WebAppMVC.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
             [Bind("Id,Name,Email,Address,City,Region,PostalCode,Country,Phone,Fax")]
@@ -127,6 +132,7 @@ namespace WebAppMVC.Controllers
         }
 
         // GET: Customers/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,6 +153,7 @@ namespace WebAppMVC.Controllers
         // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customer.FindAsync(id);
