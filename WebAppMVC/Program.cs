@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WebAppMVC.Data;
@@ -5,8 +6,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<WebAppMVCContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("WebAppMVCContext") ?? throw new InvalidOperationException("Connection string 'WebAppMVCContext' not found.")));
 
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;
+        options.LoginPath = "/Users/Login";
+        options.AccessDeniedPath = "/Forbidden/";
+    });
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 
@@ -23,7 +35,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
+app.UseAuthentication();
+
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",
