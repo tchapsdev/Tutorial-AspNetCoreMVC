@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebAppMVC.DAL;
 using WebAppMVC.Data;
 using WebAppMVC.Models;
 
@@ -13,23 +14,25 @@ namespace WebAppMVC.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly WebAppMVCContext _context;
 
-        public CustomersController(WebAppMVCContext context)
+        private readonly ICustomerRepository _customerRepository;
+
+        public CustomersController(ICustomerRepository customerRepository)
         {
-            _context = context;
+            _customerRepository = customerRepository;
         }
+
 
         // GET: Customers
         public async Task<IActionResult> Index(string q = "")
         {
-            var query = _context.Customer.Where(c =>
-                c.Name.Contains(q) ||
-                c.Email.Contains(q) ||
-                 c.Phone.Contains(q)
-                );
+            var query = (await _customerRepository.GetCustomers()).Where(c =>
+                    c.Name.Contains(q) ||
+                    c.Email.Contains(q) ||
+                     c.Phone.Contains(q)
+                    );
 
-            var customers = await query.ToListAsync();
+            var customers = query.ToList();
 
             return View(customers);
         }
@@ -42,8 +45,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customer
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _customerRepository.GetCustomerById(id.Value);
             if (customer == null)
             {
                 return NotFound();
@@ -69,8 +71,8 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
+                await _customerRepository.InsertCustomer(customer);
+                await _customerRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);
@@ -85,7 +87,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customer.FindAsync(id);
+            var customer = await _customerRepository.GetCustomerById(id.Value);
             if (customer == null)
             {
                 return NotFound();
@@ -112,12 +114,12 @@ namespace WebAppMVC.Controllers
             {
                 try
                 {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
+                    _customerRepository.UpdateCustomer(customer);
+                    await _customerRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.Id))
+                    if (!await CustomerExists(customer.Id))
                     {
                         return NotFound();
                     }
@@ -140,8 +142,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customer
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _customerRepository.GetCustomerById(id.Value);
             if (customer == null)
             {
                 return NotFound();
@@ -156,19 +157,19 @@ namespace WebAppMVC.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer = await _context.Customer.FindAsync(id);
+            var customer = await _customerRepository.GetCustomerById(id);
             if (customer != null)
             {
-                _context.Customer.Remove(customer);
+                await _customerRepository.DeleteCustomer(id);
             }
 
-            await _context.SaveChangesAsync();
+            await _customerRepository.Save();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
+        private async Task<bool> CustomerExists(int id)
         {
-            return _context.Customer.Any(e => e.Id == id);
+            return (await _customerRepository.GetCustomerById(id)) != null;
         }
     }
 }

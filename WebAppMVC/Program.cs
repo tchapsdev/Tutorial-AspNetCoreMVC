@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using WebAppMVC.DAL;
 using WebAppMVC.Data;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<WebAppMVCContext>(options =>
@@ -18,6 +19,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
+builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 
 
 var app = builder.Build();
