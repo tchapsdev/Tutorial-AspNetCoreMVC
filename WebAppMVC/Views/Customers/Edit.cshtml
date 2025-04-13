@@ -9,8 +9,8 @@
 <h4>Customer</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <div class="col-md-8">
+        <form asp-action="Edit" enctype="multipart/form-data" >
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                        
@@ -25,8 +25,11 @@
     </div>
 </div>
 
+<br />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <div class="form-group">
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {

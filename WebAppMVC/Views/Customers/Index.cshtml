@@ -29,12 +29,15 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-      @*       <th>
+            @*       <th>
                 @Html.DisplayNameFor(model => model.Address)
             </th> *@
             <th>
@@ -46,21 +49,31 @@
             <th>
                 @Html.DisplayNameFor(model => model.PostalCode)
             </th>
-         @*    <th>
+            @*    <th>
                 @Html.DisplayNameFor(model => model.Country)
             </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Phone)
             </th>
-           @*  <th>
+            @*  <th>
                 @Html.DisplayNameFor(model => model.Fax)
             </th> *@
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Image))
+                    {
+                        <img src="/@item.Image" width="75" alt="" />
+                    }
+                    else
+                    {
+                        <img src="/img/no-photo.png" width="75" alt="" />
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
