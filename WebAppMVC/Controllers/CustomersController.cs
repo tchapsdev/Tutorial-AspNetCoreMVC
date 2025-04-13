@@ -114,6 +114,26 @@ namespace WebAppMVC.Controllers
             {
                 try
                 {
+                    var files = Request.Form.Files;
+
+                    if (files.Any())
+                    {
+                        var image = files[0];
+
+                        //Set Key Name
+                        string ImageName = "img/" + Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+
+                        //Get url To Save
+                        string SavePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", ImageName);
+
+                        using (var stream = new FileStream(SavePath, FileMode.Create))
+                        {
+                            image.CopyTo(stream);
+                        }
+
+                        customer.Image = ImageName;
+                    }
+
                     _customerRepository.UpdateCustomer(customer);
                     await _customerRepository.Save();
                 }
