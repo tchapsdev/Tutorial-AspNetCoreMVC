@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebAppMVC.DAL;
-using WebAppMVC.Data;
 using WebAppMVC.Models;
 
 namespace WebAppMVC.Controllers
@@ -58,7 +52,8 @@ namespace WebAppMVC.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            return View();
+            var customer = new Customer();
+            return View(customer);
         }
 
         // POST: Customers/Create
@@ -67,7 +62,9 @@ namespace WebAppMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Name,Email,Address,City,Region,PostalCode,Country,Phone,Fax")] Customer customer)
+        public async Task<IActionResult> Create(
+            [Bind("Id,Name,Email,Address,City,Region,PostalCode,Country,Phone,Fax")]
+        Customer customer)
         {
             if (ModelState.IsValid)
             {
