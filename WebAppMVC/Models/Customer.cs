@@ -1,9 +1,12 @@
-﻿namespace WebAppMVC.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebAppMVC.Models
 {
     public class Customer
     {
         public int Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public string Email { get; set; }

@@ -5,3 +5,4 @@
 /.vs
 /WebAppMVC/bin/Debug/net8.0
 /WebAppMVC/obj
+/WebAppMVC.Tests/obj
